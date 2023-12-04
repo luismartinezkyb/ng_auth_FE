@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, map, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { environment } from 'src/app/environments/environments';
 import { User } from '../interfaces/user.interface';
 import { AuthStatus } from '../interfaces/auth-status.enum';
 import { LoginResponse } from '../interfaces/login-response.interface';
+
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,8 @@ export class AuthService {
         this._authStatus = AuthStatus.authenticated
         localStorage.setItem('token', token)
       }),
-      map(res=>true)
+      map(res=>true),
+      catchError(err=>throwError(()=> err.error.message))
 
       //TODO: ERRORES 
     )

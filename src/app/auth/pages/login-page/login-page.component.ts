@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   templateUrl: './login-page.component.html',
@@ -23,7 +24,12 @@ export class LoginPageComponent {
     this.authService.login(
       this.myForm.get('email')!.value, 
       this.myForm.get('password')!.value,
-      ).subscribe(success=>console.log(success))
-      
+      ).subscribe({
+        next: ()=> console.log('Todo bien'),
+        error: (message)=>{
+          Swal.fire('Error', message, 'error')
+          console.error({LoginError: message})
+        }
+      })
   }
 }
